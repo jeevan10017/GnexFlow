@@ -10,6 +10,8 @@ const userRoutes = require('./routes/userRoutes');
 const canvasRoutes = require('./routes/canvasRoutes');
 const agoraRoutes = require('./routes/agoraRoutes');
 const helmet = require("helmet");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const genAIRoutes = require('./routes/genAIRoutes');
 
 // Connect to database
 connectDB();
@@ -23,6 +25,20 @@ app.use(
     crossOriginEmbedderPolicy: false,
   })
 );
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+
+/****************** */
+function fileToGenerativePart(base64Image, mimeType) {
+  return {
+    inlineData: {
+      data: base64Image.split(',')[1], // Remove the "data:image/png;base64," prefix
+      mimeType
+    },
+  };
+}
+////////****************** */
 
 // Improved CORS configuration for production
 const allowedOrigins = [
@@ -333,6 +349,7 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 app.use('/api/users', userRoutes);
 app.use('/api/canvas', canvasRoutes);
 app.use('/api/agora', agoraRoutes);
+app.use('/api/genai', genAIRoutes);
 
 // Enhanced health check with memory info
 app.get('/api/health', (req, res) => {
