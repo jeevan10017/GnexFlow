@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom"; 
 import React, { useEffect } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { AppProvider, useApi } from "./context/AppContext";
 import Profile from "./pages/Profile";
 import CanvasPage from "./pages/CanvasPage";
@@ -87,6 +88,7 @@ function App() {
       <AppProvider>
         <ServerStatusProvider>
           <AppInterceptors />
+          <Analytics />
           <AppContent />
         </ServerStatusProvider>
       </AppProvider>
